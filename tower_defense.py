@@ -31,12 +31,16 @@ class TowerDefense:
         Function is called every tick. It checks the "events" of pygame, such as window resizing,
         quitting the game, keys pressed, etc.
         """
+        mouse_down = False
         for event in pygame.event.get():
             # Check if game quit
             if event.type == pygame.QUIT:
                 pygame.quit()
-            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+            elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1 and not mouse_down:
+                mouse_down = True
                 self.handle_mouse_click(event.pos)
+            elif event.type == pygame.MOUSEBUTTONUP:
+                mouse_down = False
             elif event.type == pygame.VIDEORESIZE:
                 self.view.handle_resize(event.w, event.h, self.game_state.board)
 
@@ -45,6 +49,10 @@ class TowerDefense:
         Handles the mouse clicked at the specific location
         :param mouse_position: the position of the mouse, index 0: y, index 1: x.
         """
+        if self.view.tower_menu_currently_displaying and self.view.quit_button_hitbox.collidepoint(mouse_position):
+            self.view.hide_tower_menu(self.game_state.board)
+            return
+
         # This calculation gives us the actual coordinates on the map
         clicked_y = int((mouse_position[1] - self.view.y_offset) // self.view.grid_size)
         clicked_x = int((mouse_position[0] - self.view.x_offset) // self.view.grid_size)
@@ -55,14 +63,10 @@ class TowerDefense:
 
         # highlight the square in the board
         self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board)
-
         if self.game_state.board[clicked_y][clicked_x].type_of_field in ["g", "w"]:
-            if self.view.tower_menu_currently_displaying:
-                self.view.hide_tower_menu(self.game_state.board)
-            else:
-                # Boolean that determines whether the tower menu should be displayed at the top or bottom.
-                display_topside = clicked_y >= self.game_state.field_dimensions // 2
-                self.view.display_tower_menu(display_topside, self.tower_menu)
+            # Boolean that determines whether the tower menu should be displayed at the top or bottom.
+            display_topside = clicked_y >= self.game_state.field_dimensions // 2
+            self.view.display_tower_menu(display_topside, self.tower_menu)
 
 
 TowerDefense()
