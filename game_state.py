@@ -1,4 +1,4 @@
-from Field import Field
+from field import Field
 
 
 class GameState:
@@ -16,6 +16,8 @@ class GameState:
             ["g", "g", "g", "g", "g", "g", "g", "g", "g", "g"],
             ["g", "g", "g", "g", "g", "g", "g", "g", "g", "g"]
         ]
+        self.field_dimensions = len(self.board)
+
         self.add_fields_to_board()
 
     def add_fields_to_board(self):
@@ -23,6 +25,9 @@ class GameState:
         Converts self.board into a list of lists with Field objects rather than just strings. Useful because fields have
         certain properties, such as a color associated with the type.
         """
-        for r in range(len(self.board)):
-            for c in range(len(self.board)):
-                self.board[r][c] = Field(self.board[r][c])
+        for y in range(len(self.board)):
+            for x in range(len(self.board)):
+                self.board[y][x] = Field(self.board[y][x])
+
+    def in_bounds(self, x, y):
+        return 0 <= x < self.field_dimensions and 0 <= y < self.field_dimensions
