@@ -4,6 +4,7 @@ from view.view import View
 import pygame
 
 
+# THE ENTRY POINT TO THE GAME
 class TowerDefense:
 
     def __init__(self):
@@ -55,9 +56,13 @@ class TowerDefense:
         # highlight the square in the board
         self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board)
 
-        if self.game_state.board[clicked_y][clicked_x].type_of_field == "g":
-            pass
-
+        if self.game_state.board[clicked_y][clicked_x].type_of_field in ["g", "w"]:
+            if self.view.tower_menu_currently_displaying:
+                self.view.hide_tower_menu(self.game_state.board)
+            else:
+                # Boolean that determines whether the tower menu should be displayed at the top or bottom.
+                display_topside = clicked_y >= self.game_state.field_dimensions // 2
+                self.view.display_tower_menu(display_topside, self.tower_menu)
 
 
 TowerDefense()
