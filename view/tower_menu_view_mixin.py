@@ -4,6 +4,7 @@ import pygame
 class TowerMenuViewMixin:
 
     def __init__(self):
+        self.tower_menu_box = None
         self.quit_button_hitbox = None
         self.tower_menu_currently_displaying = False
 
@@ -12,8 +13,9 @@ class TowerMenuViewMixin:
 
         y = 0 if display_topside else 3 / 4 * self.height
 
+        self.tower_menu_box = pygame.Rect(0, y, self.width, self.height // 4)
         pygame.draw.rect(self.board_view, [181, 101, 29],
-                         (0, y, self.width, self.height // 4))
+                         self.tower_menu_box)
         # Potentially also makes sense to draw lines here
 
         # Make the X-shaped button to quit the tower display

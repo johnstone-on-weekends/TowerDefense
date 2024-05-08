@@ -49,8 +49,9 @@ class TowerDefense:
         Handles the mouse clicked at the specific location
         :param mouse_position: the position of the mouse, index 0: y, index 1: x.
         """
-        if self.view.tower_menu_currently_displaying and self.view.quit_button_hitbox.collidepoint(mouse_position):
-            self.view.hide_tower_menu(self.game_state.board)
+        if self.view.tower_menu_currently_displaying and self.view.tower_menu_box.collidepoint(mouse_position):
+            if self.view.quit_button_hitbox.collidepoint(mouse_position):
+                self.view.hide_tower_menu(self.game_state.board)
             return
 
         # This calculation gives us the actual coordinates on the map
