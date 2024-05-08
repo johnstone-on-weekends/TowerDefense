@@ -25,18 +25,33 @@ class TowerMenuViewMixin:
         self.tower_menu_currently_displaying_topside = display_topside
 
         tower_menu_box_height = self.height // 8
-
         y = 0 if display_topside else self.height - tower_menu_box_height
 
+        # Make the background box for the tower menu
         self.tower_menu_box = pygame.Rect(0, y, self.width, tower_menu_box_height)
         pygame.draw.rect(self.board_view, [181, 101, 29],
                          self.tower_menu_box)
-        # Potentially also makes sense to draw lines here
 
-        # Make the X-shaped button to quit the tower display
+        # Make the squares along the background box
+        self.draw_unit_boxes(tower_menu_box_height, y)
+
+        # Make the X-shaped button to quit the tower menu
         self.display_quit_button(y)
 
         pygame.display.update()
+
+    def draw_unit_boxes(self, tower_menu_box_height, y):
+        """
+        Draws blue boxes inside the tower menu box. These boxes represent the units.
+        :param tower_menu_box_height: the height of the tower menu box
+        :param y: the y that the box is located at (either near bottom or top)
+        """
+        num_rectangles = self.width // tower_menu_box_height
+        margin = 1 / 8 * tower_menu_box_height
+        rectangle_size = 3 / 4 * tower_menu_box_height
+        for i in range(num_rectangles):
+            rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, rectangle_size, rectangle_size)
+            pygame.draw.rect(self.board_view, [0, 255, 255], rect)
 
     def display_quit_button(self, y):
         """
