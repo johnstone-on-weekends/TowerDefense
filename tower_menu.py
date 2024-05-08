@@ -6,8 +6,7 @@ class TowerMenu:
         """
         This class represents the menu that pops up that has the towers that can be placed
         """
-        self.towers = ["popper", "jeff", "billy", "factory", "mitch", "robot", "warrior", "elephant", "Popper",
-                       "Popper", "Popper", "Popper", "Popper", "Popper", "Popper", "Popper", "Popper", "Popper"]
+        self.towers = ["popper", "jeff", "billy", "factory", "mitch", "robot", "warrior", "elephant"]
 
         self.add_tower_class()
 

@@ -20,4 +20,3 @@ class EventHandlingMixin:
         self.scale_tower_images(tower_menu.towers)
         if not self.tower_menu_currently_displaying:
             self.display_tower_menu_button()
-        pygame.display.update()

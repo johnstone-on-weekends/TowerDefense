@@ -9,7 +9,6 @@ class BoardDrawingMixin:
         """
         self.board_view = pygame.display.set_mode((self.board_size, self.board_size), pygame.RESIZABLE)
         pygame.display.set_caption('Tower Defense')
-        pygame.display.update()
 
     def draw_board(self, board, tower_menu=None, skip_display_tower_menu=False):
         """
@@ -27,14 +26,14 @@ class BoardDrawingMixin:
             for j, field in enumerate(row):
                 x = j * self.grid_size + self.x_offset
                 y = i * self.grid_size + self.y_offset
-                pygame.draw.rect(self.board_view, field.color,
-                                 (x, y, self.grid_size, self.grid_size))
+                rect = (x, y, self.grid_size, self.grid_size)
+                pygame.draw.rect(self.board_view, field.color, rect)
+                if field.tower:
+                    self.board_view.blit(field.tower.image, rect)
                 # Potentially also makes sense to draw lines here
 
         if self.tower_menu_currently_displaying and not skip_display_tower_menu:
             self.display_tower_menu(self.tower_menu_currently_displaying_topside, tower_menu, board)
-
-        pygame.display.update()
 
     def highlight_selected_field(self, x, y, board, tower_menu):
         """
@@ -53,4 +52,6 @@ class BoardDrawingMixin:
             self.grid_size
         )
         pygame.draw.rect(self.board_view, [128, 128, 0], rect)
-        pygame.display.update()
+        if board[y][x].tower:
+            self.board_view.blit(board[y][x].tower.image, rect)
+

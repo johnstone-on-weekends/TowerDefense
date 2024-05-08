@@ -7,6 +7,7 @@ class TowerMenuViewMixin:
         """
         Initializes some components for the TowerMenuView
         """
+        self.tower_unit_hitboxes = []
         self.rectangle_size = 5
         self.tower_menu_currently_displaying_topside = None
         self.reveal_tower_menu_bottom_button = None
@@ -39,8 +40,6 @@ class TowerMenuViewMixin:
         # Make the X-shaped button to quit the tower menu
         self.display_quit_button(y)
 
-        pygame.display.update()
-
     def draw_unit_boxes(self, tower_menu_box_height, y, tower_menu):
         """
         Draws blue boxes inside the tower menu box. These boxes represent the units.
@@ -52,9 +51,11 @@ class TowerMenuViewMixin:
         margin = 1 / 8 * tower_menu_box_height
         self.rectangle_size = 3/4 * tower_menu_box_height
         self.scale_tower_images(tower_menu.towers)
+        self.tower_unit_hitboxes = []
         for i in range(num_rectangles):
             rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, self.rectangle_size, self.rectangle_size)
-            pygame.draw.rect(self.board_view, [0, 255, 255], rect)
+            self.tower_unit_hitboxes.append(rect)
+            pygame.draw.rect(self.board_view, [0, 255, 255], rect, border_radius=5)
             self.board_view.blit(tower_menu.towers[i].image, rect)
 
     def display_quit_button(self, y):
@@ -73,7 +74,6 @@ class TowerMenuViewMixin:
                          (self.width - cross_length - cross_offset, y + cross_offset), 2)
         self.quit_button_hitbox = pygame.Rect(self.width - cross_length - cross_offset, y + cross_offset, cross_length,
                                               cross_length)
-        pygame.display.update()
 
     def hide_tower_menu(self, board):
         """
@@ -84,7 +84,6 @@ class TowerMenuViewMixin:
         self.board_view.fill([50, 50, 50])
         self.draw_board(board)
         self.display_tower_menu_button()
-        pygame.display.update()
 
     def display_tower_menu_button(self):
         """
@@ -100,4 +99,3 @@ class TowerMenuViewMixin:
         # Actually display the buttons
         pygame.draw.rect(self.board_view, [181, 101, 29], self.reveal_tower_menu_top_button)
         pygame.draw.rect(self.board_view, [181, 101, 29], self.reveal_tower_menu_bottom_button)
-        pygame.display.update()

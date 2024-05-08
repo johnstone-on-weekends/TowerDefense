@@ -3,6 +3,7 @@ class Field:
     def __init__(self, type_of_field):
         self.type_of_field = type_of_field
         self.color = self.match_field_color()
+        self.tower = None
 
     def match_field_color(self):
         """
