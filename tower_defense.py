@@ -1,3 +1,4 @@
+from enemy import Enemy
 from game_state import GameState
 from tower_menu import TowerMenu
 from view.view import View
@@ -16,6 +17,7 @@ class TowerDefense:
         self.view = View(self.game_state, self.tower_menu.towers)
         self.current_tower_clicked = None
         self.last_tower = None
+        self.enemy_1 = Enemy(4, (100, 100))
         self.run()
 
     def run(self):
@@ -48,6 +50,11 @@ class TowerDefense:
                 self.view.handle_resize(event.w, event.h, self.game_state.board, self.tower_menu)
 
     def update(self):
+        # self.view.redraw_everything(self.game_state.board, self.tower_menu)
+        #
+        # self.enemy_1.draw(self.view.board_view)
+        # self.enemy_1.take_hit(.001)
+        # self.enemy_1.move()
         if self.current_tower_clicked:
             self.view.draw_tower_at_mouse(self.current_tower_clicked, self.game_state.board, self.tower_menu)
 
@@ -71,7 +78,7 @@ class TowerDefense:
             if self.game_state.board[clicked_y][clicked_x].type_of_field == "g":
                 self.check_tower_being_placed(clicked_x, clicked_y)
             else:
-                self.view.draw_board(self.game_state.board, self.tower_menu)
+                self.view.redraw_everything(self.game_state.board, self.tower_menu)
 
         # highlight the square in the board
         self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board, self.tower_menu)
@@ -79,7 +86,7 @@ class TowerDefense:
     def check_tower_being_placed(self, clicked_x, clicked_y):
         # In motion of placing tower, we clicked on grass. This is valid, and we display the tower there.
         self.game_state.board[clicked_y][clicked_x].tower = self.last_tower
-        self.view.draw_board(self.game_state.board, self.tower_menu)
+        self.view.redraw_everything(self.game_state.board, self.tower_menu)
 
     def check_button_clicked(self, mouse_position):
         """
@@ -97,11 +104,11 @@ class TowerDefense:
             # tower menu not displayed, therefore check if we collide
             if self.view.reveal_tower_menu_top_button.collidepoint(mouse_position):
                 # We have collided with the upper display tower menu button
-                self.view.display_tower_menu(True, self.tower_menu, self.game_state.board)
+                self.view.display_tower_menu(True, self.tower_menu)
                 return True
             elif self.view.reveal_tower_menu_bottom_button.collidepoint(mouse_position):
                 # We have collided with the lower display tower menu button
-                self.view.display_tower_menu(False, self.tower_menu, self.game_state.board)
+                self.view.display_tower_menu(False, self.tower_menu)
                 return True
         return False
 
@@ -111,7 +118,7 @@ class TowerDefense:
         :param mouse_position: the mouse position. Guaranteed to be on top of the menu bar.
         """
         if self.last_tower:
-            self.view.draw_board(self.game_state.board, self.tower_menu)
+            self.view.redraw_everything(self.game_state.board, self.tower_menu)
         if self.view.quit_button_hitbox.collidepoint(mouse_position):
             # We have collided with the close tower menu button
             self.view.hide_tower_menu(self.game_state.board)

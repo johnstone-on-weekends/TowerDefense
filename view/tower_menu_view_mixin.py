@@ -16,14 +16,13 @@ class TowerMenuViewMixin:
         self.quit_button_hitbox = None
         self.tower_menu_currently_displaying = False
 
-    def display_tower_menu(self, display_topside, tower_menu, board):
+    def display_tower_menu(self, display_topside, tower_menu):
         """
         Displays the tower menu with represent to the boolean display_topside which dictates location
         :param display_topside: a boolean that tells the machine whether to display the panel in the top or bottom
         :param tower_menu: the menu at this time
         """
         self.tower_menu_currently_displaying = True
-        self.draw_board(board, [], True)
         self.tower_menu_currently_displaying_topside = display_topside
 
         tower_menu_box_height = self.height // 8
@@ -56,7 +55,7 @@ class TowerMenuViewMixin:
             rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, self.rectangle_size, self.rectangle_size)
             self.tower_unit_hitboxes.append(rect)
             pygame.draw.rect(self.board_view, [0, 255, 255], rect, border_radius=5)
-            self.board_view.blit(tower_menu.towers[i].image, rect)
+            self.board_view.blit(tower_menu.towers[i].icon_image, rect)
 
     def display_quit_button(self, y):
         """

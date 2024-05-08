@@ -36,8 +36,14 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
     def scale_tower_images(self, towers):
         for tower in towers:
             tower.init_image()
-            tower.image = pygame.transform.smoothscale(tower.image, (self.rectangle_size, self.rectangle_size))
+            tower.icon_image = pygame.transform.smoothscale(tower.icon_image,
+                                                            (self.rectangle_size, self.rectangle_size))
 
     def draw_tower_at_mouse(self, tower, board, tower_menu):
-        self.draw_board(board, tower_menu)
-        self.board_view.blit(tower.image, (pygame.mouse.get_pos()))
+        self.redraw_everything(board, tower_menu)
+        self.board_view.blit(tower.icon_image, (pygame.mouse.get_pos()))
+
+    def redraw_everything(self, board, tower_menu):
+        self.draw_board(board)
+        if self.tower_menu_currently_displaying:
+            self.display_tower_menu(self.tower_menu_currently_displaying_topside, tower_menu)
