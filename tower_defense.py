@@ -11,8 +11,8 @@ class TowerDefense:
         """
         Initializes the necessary objects. Then runs the game.
         """
-        self.view = View()
         self.game_state = GameState()
+        self.view = View(self.game_state.board)
         self.tower_menu = TowerMenu()
         self.run()
 
@@ -20,7 +20,6 @@ class TowerDefense:
         """
         Initial function called to run the game. Starts the chain of checking events.
         """
-        self.view.draw_board(self.game_state.board)
         clock = pygame.time.Clock()
         while True:
             self.check_events()
@@ -49,9 +48,8 @@ class TowerDefense:
         Handles the mouse clicked at the specific location
         :param mouse_position: the position of the mouse, index 0: y, index 1: x.
         """
-        if self.view.tower_menu_currently_displaying and self.view.tower_menu_box.collidepoint(mouse_position):
-            if self.view.quit_button_hitbox.collidepoint(mouse_position):
-                self.view.hide_tower_menu(self.game_state.board)
+        if self.check_button_clicked(mouse_position):
+            # A button being pressed means we don't have to continue resolving other effects.
             return
 
         # This calculation gives us the actual coordinates on the map
@@ -64,10 +62,31 @@ class TowerDefense:
 
         # highlight the square in the board
         self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board)
-        if self.game_state.board[clicked_y][clicked_x].type_of_field in ["g", "w"]:
-            # Boolean that determines whether the tower menu should be displayed at the top or bottom.
-            display_topside = clicked_y >= self.game_state.field_dimensions // 2
-            self.view.display_tower_menu(display_topside, self.tower_menu)
+
+    def check_button_clicked(self, mouse_position):
+        """
+        Checks all the buttons and resolves them if they were clicked.
+        :param mouse_position: the position of the mouse
+        :return: True if there was a button pressed, false otherwise
+        """
+        if self.view.tower_menu_currently_displaying and self.view.tower_menu_box.collidepoint(mouse_position):
+            if self.view.quit_button_hitbox.collidepoint(mouse_position):
+                # We have collided with the close tower menu button
+                self.view.hide_tower_menu(self.game_state.board)
+            return True
+
+        elif not self.view.tower_menu_currently_displaying:
+            # tower menu not displayed, therefore check if we collide
+            if self.view.reveal_tower_menu_top_button.collidepoint(mouse_position):
+                # We have collided with the upper display tower menu button
+                self.view.display_tower_menu(True, self.tower_menu, self.game_state.board)
+                return True
+
+            elif self.view.reveal_tower_menu_bottom_button.collidepoint(mouse_position):
+                # We have collided with the lower display tower menu button
+                self.view.display_tower_menu(False, self.tower_menu, self.game_state.board)
+                return True
+        return False
 
 
 TowerDefense()
