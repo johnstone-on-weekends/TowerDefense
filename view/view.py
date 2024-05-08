@@ -9,7 +9,7 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
     # This view class is called from the rest of the program, and inherits the methods and attributes of the above
     # classes. This allows us to refactor our "view" class into smaller classes with more precise functionalities.
 
-    def __init__(self, board):
+    def __init__(self, game_state, towers):
         """
         Initializes the visual components of the game
         """
@@ -21,9 +21,7 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
         self.board_size = 800
         self.width = self.board_size
         self.height = self.board_size
-        self.grid_size = self.board_size / len(board)
-
-        self.initialize_images()
+        self.grid_size = self.board_size / len(game_state.board)
 
         # x and y offsets tell us where the board should be centered at when the display isn't square
         self.x_offset = 0
@@ -31,14 +29,12 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
 
         # Make and draw the initial board
         self.init_board()
-        self.draw_board(board)
+        self.scale_tower_images(towers)
+        self.draw_board(game_state.board)
         self.display_tower_menu_button()
 
-    def initialize_images(self):
-        self.popper_image = pygame.image.load(f"assets/images/popper.png")
-        self.scale_images()
-
-    def scale_images(self):
-        print(self.grid_size)
-        self.popper_image = pygame.transform.smoothscale(self.popper_image, (self.grid_size, self.grid_size))
-
+    def scale_tower_images(self, towers):
+        for tower in towers:
+            tower.init_image()
+            tower.image = pygame.transform.smoothscale(tower.image, (self.rectangle_size, self.rectangle_size))
+        pygame.display.update()

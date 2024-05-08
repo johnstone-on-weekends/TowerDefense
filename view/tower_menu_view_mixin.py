@@ -7,6 +7,7 @@ class TowerMenuViewMixin:
         """
         Initializes some components for the TowerMenuView
         """
+        self.rectangle_size = 5
         self.tower_menu_currently_displaying_topside = None
         self.reveal_tower_menu_bottom_button = None
         self.reveal_tower_menu_top_button = None
@@ -43,19 +44,19 @@ class TowerMenuViewMixin:
     def draw_unit_boxes(self, tower_menu_box_height, y, tower_menu):
         """
         Draws blue boxes inside the tower menu box. These boxes represent the units.
+        :param tower_menu: the tower menu that contains the tower objects
         :param tower_menu_box_height: the height of the tower menu box
         :param y: the y that the box is located at (either near bottom or top)
         """
-        num_rectangles = self.width // tower_menu_box_height
+        num_rectangles = min(self.width // tower_menu_box_height, len(tower_menu.towers))
         margin = 1 / 8 * tower_menu_box_height
-        rectangle_size = 3 / 4 * tower_menu_box_height
+        self.rectangle_size = 3/4 * tower_menu_box_height
+        self.scale_tower_images(tower_menu.towers)
         for i in range(num_rectangles):
-            rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, rectangle_size, rectangle_size)
+            rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, self.rectangle_size, self.rectangle_size)
             pygame.draw.rect(self.board_view, [0, 255, 255], rect)
-            image_rect = self.popper_image.get_rect()
-            # Calculate the position to blit the image
-            image_rect.center = (rect.centerx, rect.centery)
-            self.board_view.blit(self.popper_image, image_rect)
+            self.board_view.blit(tower_menu.towers[i].image, rect)
+
     def display_quit_button(self, y):
         """
         Creates and displays a leave button. Involves making an X-shaped cross with lines.

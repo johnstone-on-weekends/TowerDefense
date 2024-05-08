@@ -12,8 +12,8 @@ class TowerDefense:
         Initializes the necessary objects. Then runs the game.
         """
         self.game_state = GameState()
-        self.view = View(self.game_state.board)
         self.tower_menu = TowerMenu()
+        self.view = View(self.game_state, self.tower_menu.towers)
         self.run()
 
     def run(self):
@@ -41,7 +41,7 @@ class TowerDefense:
             elif event.type == pygame.MOUSEBUTTONUP:
                 mouse_down = False
             elif event.type == pygame.VIDEORESIZE:
-                self.view.handle_resize(event.w, event.h, self.game_state.board)
+                self.view.handle_resize(event.w, event.h, self.game_state.board, self.tower_menu)
 
     def handle_mouse_click(self, mouse_position):
         """
