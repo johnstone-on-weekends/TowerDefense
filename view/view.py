@@ -1,3 +1,5 @@
+import pygame
+
 from view.board_drawing_mixin import BoardDrawingMixin
 from view.event_handling_mixin import EventHandlingMixin
 from view.tower_menu_view_mixin import TowerMenuViewMixin
@@ -13,13 +15,15 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
         """
         # Grid size will depend on the map, so we keep it none until we give our first map
         super().__init__()
-        self.grid_size = None
         self.board_view = None
 
         # Board dimensions
         self.board_size = 800
         self.width = self.board_size
         self.height = self.board_size
+        self.grid_size = self.board_size / len(board)
+
+        self.initialize_images()
 
         # x and y offsets tell us where the board should be centered at when the display isn't square
         self.x_offset = 0
@@ -29,3 +33,12 @@ class View(BoardDrawingMixin, EventHandlingMixin, TowerMenuViewMixin):
         self.init_board()
         self.draw_board(board)
         self.display_tower_menu_button()
+
+    def initialize_images(self):
+        self.popper_image = pygame.image.load(f"assets/images/popper.png")
+        self.scale_images()
+
+    def scale_images(self):
+        print(self.grid_size)
+        self.popper_image = pygame.transform.smoothscale(self.popper_image, (self.grid_size, self.grid_size))
+

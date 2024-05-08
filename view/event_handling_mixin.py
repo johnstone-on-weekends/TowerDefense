@@ -12,5 +12,7 @@ class EventHandlingMixin:
         self.x_offset = max((self.width - self.height) // 2, 0)
         self.y_offset = max((self.height - self.width) // 2, 0)
         self.draw_board(board)
+        self.grid_size = self.board_size / len(board)
+        self.scale_images()
         if not self.tower_menu_currently_displaying:
             self.display_tower_menu_button()

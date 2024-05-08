@@ -11,11 +11,15 @@ class BoardDrawingMixin:
         pygame.display.set_caption('Tower Defense')
         pygame.display.update()
 
-    def draw_board(self, board, skip_display_tower_menu = False):
+    def draw_board(self, board, tower_menu=None, skip_display_tower_menu=False):
         """
         Draws the board into a grid on the screen.
+        :param skip_display_tower_menu: optional parameter to skip displaying the tower menu
+        :param tower_menu:
         :param board: a square list of lists that represent the map, or level.
         """
+        if tower_menu is None:
+            tower_menu = []
         self.board_view.fill([50, 50, 50])
         self.grid_size = self.board_size / len(board)
 
@@ -28,18 +32,18 @@ class BoardDrawingMixin:
                 # Potentially also makes sense to draw lines here
 
         if self.tower_menu_currently_displaying and not skip_display_tower_menu:
-            self.display_tower_menu(self.tower_menu_currently_displaying_topside, None, board)
+            self.display_tower_menu(self.tower_menu_currently_displaying_topside, tower_menu, board)
 
         pygame.display.update()
 
-    def highlight_selected_field(self, x, y, board):
+    def highlight_selected_field(self, x, y, board, tower_menu):
         """
         Highlights the selected field on the board.
         :param x: the x coordinate for the field on the board.
         :param y: the y coordinate for the field on the board.
         :param board: the board
         """
-        self.draw_board(board)
+        self.draw_board(board, tower_menu)
         if not self.tower_menu_currently_displaying:
             self.display_tower_menu_button()
         rect = (

@@ -21,7 +21,7 @@ class TowerMenuViewMixin:
         :param tower_menu: the menu at this time
         """
         self.tower_menu_currently_displaying = True
-        self.draw_board(board, True)
+        self.draw_board(board, [], True)
         self.tower_menu_currently_displaying_topside = display_topside
 
         tower_menu_box_height = self.height // 8
@@ -33,14 +33,14 @@ class TowerMenuViewMixin:
                          self.tower_menu_box)
 
         # Make the squares along the background box
-        self.draw_unit_boxes(tower_menu_box_height, y)
+        self.draw_unit_boxes(tower_menu_box_height, y, tower_menu)
 
         # Make the X-shaped button to quit the tower menu
         self.display_quit_button(y)
 
         pygame.display.update()
 
-    def draw_unit_boxes(self, tower_menu_box_height, y):
+    def draw_unit_boxes(self, tower_menu_box_height, y, tower_menu):
         """
         Draws blue boxes inside the tower menu box. These boxes represent the units.
         :param tower_menu_box_height: the height of the tower menu box
@@ -52,7 +52,10 @@ class TowerMenuViewMixin:
         for i in range(num_rectangles):
             rect = pygame.Rect(i * tower_menu_box_height + margin, y + margin, rectangle_size, rectangle_size)
             pygame.draw.rect(self.board_view, [0, 255, 255], rect)
-
+            image_rect = self.popper_image.get_rect()
+            # Calculate the position to blit the image
+            image_rect.center = (rect.centerx, rect.centery)
+            self.board_view.blit(self.popper_image, image_rect)
     def display_quit_button(self, y):
         """
         Creates and displays a leave button. Involves making an X-shaped cross with lines.

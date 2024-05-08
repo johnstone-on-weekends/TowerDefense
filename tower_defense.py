@@ -61,7 +61,7 @@ class TowerDefense:
             return
 
         # highlight the square in the board
-        self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board)
+        self.view.highlight_selected_field(clicked_x, clicked_y, self.game_state.board, self.tower_menu)
 
     def check_button_clicked(self, mouse_position):
         """
