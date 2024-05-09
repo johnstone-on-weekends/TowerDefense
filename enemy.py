@@ -9,7 +9,10 @@ class Enemy(pygame.sprite.Sprite):
         self.hp = hp
         self.max_hp = hp
         self.speed = 2
-        self.position = Vector2(waypoints)  # Position of the enemy
+        self.waypoints = waypoints
+        self.position = Vector2(waypoints[0])  # Position of the enemy
+        self.target_waypoint = 1
+        self.dead = False
 
     def take_hit(self, damage_taken):
         """
@@ -26,12 +29,25 @@ class Enemy(pygame.sprite.Sprite):
         """
         Update the enemy's position
         """
-        self.position[0] += 1
+        if self.target_waypoint >= len(self.waypoints):
+            self.dead = True
+            return
 
-    def draw(self, surface):
+        self.target = Vector2(self.waypoints[self.target_waypoint])
+        self.movement = self.target - self.position
+        dist = self.movement.length()
+        if dist >= self.speed:
+            self.position += self.movement.normalize() * self.speed
+        else:
+            if dist != 0:
+                self.position += self.movement.normalize() * dist
+            self.target_waypoint += 1
+
+    def draw(self, surface, x_offset, y_offset):
         """
         Draw the enemy on the given surface
         :param surface: the surface to draw the enemy on
         """
-        print(self.position)
-        pygame.draw.circle(surface, (255, 0, 0), self.position, self.hp*10)
+        if not self.dead:
+            pygame.draw.circle(surface, (255, 0, 0),
+                               (self.position[0] + x_offset, self.position[1] + y_offset), self.hp * 10)

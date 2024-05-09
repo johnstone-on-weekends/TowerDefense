@@ -17,8 +17,16 @@ class TowerDefense:
         self.view = View(self.game_state, self.tower_menu.towers)
         self.current_tower_clicked = None
         self.last_tower = None
-        self.enemy_1 = Enemy(4, (100, 100))
+
+        self.enemy_1 = Enemy(4, self.rescale_waypoints(self.game_state.waypoints))
         self.run()
+
+    def rescale_waypoints(self, waypoints):
+        rescaled_waypoints = []
+        for i in range(len(waypoints)):
+            rescaled_waypoints.append((waypoints[i][0] * self.view.grid_size + self.view.grid_size // 2,
+                                       waypoints[i][1] * self.view.grid_size + self.view.grid_size // 2))
+        return rescaled_waypoints
 
     def run(self):
         """
@@ -50,11 +58,11 @@ class TowerDefense:
                 self.view.handle_resize(event.w, event.h, self.game_state.board, self.tower_menu)
 
     def update(self):
-        # self.view.redraw_everything(self.game_state.board, self.tower_menu)
-        #
-        # self.enemy_1.draw(self.view.board_view)
-        # self.enemy_1.take_hit(.001)
-        # self.enemy_1.move()
+        self.view.redraw_everything(self.game_state.board, self.tower_menu)
+
+        self.enemy_1.draw(self.view.board_view, self.view.x_offset, self.view.y_offset)
+        self.enemy_1.take_hit(.001)
+        self.enemy_1.move()
         if self.current_tower_clicked:
             self.view.draw_tower_at_mouse(self.current_tower_clicked, self.game_state.board, self.tower_menu)
 
